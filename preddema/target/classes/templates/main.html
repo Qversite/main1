@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        /* Общие стили */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .statements {
+            margin-bottom: 20px;
+        }
+        details {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        /* Стили для summary внутри details */
+        summary {
+            cursor: pointer;
+            padding: 10px;
+            background-color: #f2f2f2;
+            border-bottom: 1px solid #ccc;
+            border-radius: 5px 5px 0 0;
+        }
+
+        /* Скрытие маркера вложенности у summary */
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        details[open] {
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        details p {
+            padding: 10px;
+            margin: 0;
+            border-bottom: 1px solid #ccc;
+            word-wrap: break-word;
+        }
+
+        .addStatements {
+            background-color: #f2f2f2;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        form {
+            display: grid;
+            gap: 10px;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        input[type="submit"] {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        /* Опциональные стили для дизайна */
+        body {
+            background-color: #f8f8f8;
+        }
+
+        .container {
+            background-color: #fff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        h1{
+            text-align: center;
+        }
+        header {
+            background-color: #4caf50;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        /* Стили для span (логотип) */
+        span {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* Стили для ссылки a */
+        a {
+            text-decoration: none;
+            color: white;
+            padding: 10px 15px;
+            border: 1px solid white;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .logout{
+            color: white;
+            padding: 10px 15px;
+            border: 1px solid white;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .logout:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .buttons{
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <span>Нарушениям.Нет</span>
+            <div class="buttons">
+                <form th:action="@{/logout}" method="post">
+                    <input type="submit" value="Выйти" class="logout">
+                </form>
+            <a th:href="@{/admin/statements}" sec:authorize="hasRole('ADMIN')">Админ панель</a>
+            </div>
+        </header>
+        <h1>Ваши обращения</h1>
+    <div class="statements">
+    <details th:each="statement : ${statements}">
+        <summary th:text="${statement.getTopic()}"></summary>
+        <p th:text="${statement.getCarNum()}"></p>
+        <p th:text="${statement.getFio()}"></p>
+        <p th:text="${statement.getUser().getPhoneNum()}"></p>
+        <p th:text="${statement.getUser().getEmail()}"></p>
+        <p th:text="${statement.getDescription()}"></p>
+    </details>
+    </div>
+    <div class="addStatements">
+        <form th:action="@{/addStatement}" method="post">
+            <input type="text" name="topic"  placeholder="Тема">
+            <input type="text" name="carNum"  placeholder="Номер машины">
+            <textarea name="Description" placeholder="Описание"></textarea>
+            <input type="submit" value="Отправить">
+        </form>
+    </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Обращения</title>
+  <style>
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f8f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 800px;
+      width: 100%;
+      margin: 20px;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #000cff;
+    }
+
+    header {
+      background-color: #000cff;
+      color: white;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 10px 10px 0 0;
+    }
+
+    span {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .logout, .add-statement {
+      text-decoration: none;
+      color: white;
+      padding: 10px 15px;
+      border: 1px solid white;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #0010ff;
+    }
+
+    .logout:hover, .add-statement:hover {
+      background-color: #7d92e3;
+    }
+
+    .statements {
+      margin-bottom: 20px;
+    }
+
+    details {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      background-color: #f2f2f2;
+    }
+
+    summary {
+      cursor: pointer;
+      padding: 10px;
+      background-color: #f2f2f2;
+      border-bottom: 1px solid #ccc;
+      border-radius: 5px 5px 0 0;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    summary:hover {
+      background-color: #e2e2e2;
+    }
+
+    details[open] {
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    details p {
+      padding: 10px;
+      margin: 0;
+      border-bottom: 1px solid #ccc;
+      word-wrap: break-word;
+    }
+
+    details form {
+      display: flex;
+      gap: 10px;
+      padding: 10px;
+      border-top: 1px solid #ccc;
+    }
+
+    input[type="text"] {
+      display: none;
+    }
+
+    input[type="submit"] {
+      background-color: #ff0000;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #ff0000;
+    }
+
+    .details-content {
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <span>Нарушениям.Нет</span>
+    <div class="buttons">
+      <form th:action="@{/logout}" method="post">
+        <input type="submit" value="Выйти" class="logout">
+      </form>
+      <a th:href="@{/main}" class="add-statement">Добавить обращение</a>
+    </div>
+  </header>
+  <h1>Обращения</h1>
+  <details th:each="statement : ${statements}">
+    <summary th:text="${statement.getTopic()}"></summary>
+    <div class="details-content">
+      <p th:text="'Номер автомобиля: ' + ${statement.getCarNum()}"></p>
+      <p th:text="'ФИО: ' + ${statement.getFio()}"></p>
+      <p th:text="'Номер телефона: ' + ${statement.getUser().getPhoneNum()}"></p>
+      <p th:text="'Email: ' + ${statement.getUser().getEmail()}"></p>
+      <p th:text="'Описание: ' + ${statement.getDescription()}"></p>
+      <p th:text="'Статус: ' + ${statement.getStatus()}"></p>
+      <form th:action="@{/admin/statusTrue}" method="post">
+        <input type="text" name="id" th:value="${statement.getId()}">
+        <input type="submit" value="Подтвердить">
+      </form>
+      <form th:action="@{/admin/statusFalse}" method="post">
+        <input type="text" name="id" th:value="${statement.getId()}">
+        <input type="submit" value="Отказать">
+      </form>
+    </div>
+  </details>
+</div>
+</body>
+</html>
